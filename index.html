@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>БУ!</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: black;
+      overflow: hidden;
+    }
+    img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <img src="https://steamuserimages-a.akamaihd.net/ugc/2469738708355327678/E0567EDF9BD0F56C5A3D94A7D83B8F07942E4FFD/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Scary Image">
+
+  <audio id="scream" autoplay>
+    <source src="https://www.soundjay.com/human/sounds/scream-01.mp3" type="audio/mpeg">
+    Ваш браузер не поддерживает воспроизведение аудио.
+  </audio>
+
+  <script>
+    // Чтобы звук играл на мобильных — повторно запускаем по взаимодействию
+    window.addEventListener("click", () => {
+      document.getElementById("scream").play();
+    });
+  </script>
+</body>
+</html>
