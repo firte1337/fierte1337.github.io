@@ -19,9 +19,8 @@
 
 ## 🔗 Ссылки
 
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/firte1337)
-[![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fierte1337)
 [![Website](https://img.shields.io/badge/Website-9146ff?style=for-the-badge&logo=google-chrome&logoColor=white)](https://fierte1337.vercel.app/)
+[![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fierte1337)
 ---
 
 *100% вайб*
