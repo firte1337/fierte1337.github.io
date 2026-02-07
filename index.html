@@ -1,36 +1,838 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>БУГАГА!</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      background-color: black;
-      overflow: hidden;
-    }
-    img {
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fierte | Vibe Developer</title>
+    <link rel="icon" type="image/png" href="avatar.png">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --twitch: #9146ff;
+            --twitch-dark: #5c16c5;
+            --arctic: #f0f6f0;
+            --void: #0d0d0d;
+            --pixel-bg: #1a1a2e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--void);
+            color: var(--arctic);
+            overflow-x: hidden;
+            font-size: 20px;
+            line-height: 1.4;
+        }
+
+        /* Pixel Grid Background */
+        .pixel-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background-image: 
+                linear-gradient(rgba(145, 70, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(145, 70, 255, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* Molecular Canvas */
+        #molecule-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Heart Particles Container */
+        #heart-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .pixel-heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--twitch);
+            box-shadow: 
+                4px 0 0 var(--twitch),
+                8px 0 0 var(--twitch),
+                12px 4px 0 var(--twitch),
+                16px 8px 0 var(--twitch),
+                12px 12px 0 var(--twitch),
+                8px 16px 0 var(--twitch),
+                4px 12px 0 var(--twitch),
+                0 8px 0 var(--twitch),
+                -4px 4px 0 var(--twitch),
+                -8px 0 0 var(--twitch),
+                -12px 0 0 var(--twitch);
+            animation: heartFloat 2s ease-out forwards;
+        }
+
+        .pixel-heart.dark {
+            background: var(--void);
+            box-shadow: 
+                4px 0 0 var(--void),
+                8px 0 0 var(--void),
+                12px 4px 0 var(--void),
+                16px 8px 0 var(--void),
+                12px 12px 0 var(--void),
+                8px 16px 0 var(--void),
+                4px 12px 0 var(--void),
+                0 8px 0 var(--void),
+                -4px 4px 0 var(--void),
+                -8px 0 0 var(--void),
+                -12px 0 0 var(--void);
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: translateY(0) scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            20% {
+                transform: translateY(-30px) scale(1) rotate(10deg);
+            }
+            100% {
+                transform: translateY(-200px) scale(0.5) rotate(45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: rgba(13, 13, 13, 0.9);
+            border-bottom: 2px solid var(--twitch);
+            box-shadow: 0 4px 0 var(--twitch-dark);
+        }
+
+        .logo {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            color: var(--twitch);
+            text-shadow: 2px 2px 0 var(--twitch-dark);
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            padding: 10px;
+            transition: transform 0.1s;
+            user-select: none;
+        }
+
+        .logo:hover {
+            animation: pixelShake 0.3s infinite;
+        }
+
+        .logo:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pixelShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-2px, 2px); }
+            50% { transform: translate(2px, -2px); }
+            75% { transform: translate(-2px, -2px); }
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--arctic);
+            text-decoration: none;
+            font-size: 1.3rem;
+            position: relative;
+            padding: 5px 10px;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            border-color: var(--twitch);
+            background: rgba(145, 70, 255, 0.1);
+            box-shadow: 4px 4px 0 var(--twitch);
+            transform: translate(-2px, -2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 5% 50px;
+            position: relative;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            border: 2px solid var(--twitch);
+            color: var(--twitch);
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 4px 4px 0 var(--twitch);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            text-shadow: 4px 4px 0 var(--twitch-dark);
+        }
+
+        .hero h1 span {
+            color: var(--twitch);
+            display: block;
+            margin-top: 1rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--arctic);
+            opacity: 0.8;
+            margin-bottom: 3rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .pixel-btn {
+            padding: 15px 30px;
+            border: 3px solid var(--twitch);
+            background: transparent;
+            color: var(--arctic);
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 4px 4px 0 var(--twitch);
+            transition: all 0.1s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pixel-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 var(--twitch);
+            background: rgba(145, 70, 255, 0.1);
+        }
+
+        .pixel-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0 0 0 var(--twitch);
+        }
+
+        .pixel-btn.filled {
+            background: var(--twitch);
+            color: var(--void);
+        }
+
+        .pixel-btn.filled:hover {
+            background: var(--twitch-dark);
+        }
+
+        /* Sections */
+        section {
+            padding: 6rem 5%;
+            position: relative;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-tag {
+            color: var(--twitch);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            text-shadow: 3px 3px 0 var(--twitch-dark);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: var(--pixel-bg);
+            border: 3px solid var(--twitch);
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: 6px 6px 0 rgba(145, 70, 255, 0.3);
+            transition: all 0.2s;
+        }
+
+        .project-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0 var(--twitch);
+        }
+
+        .project-status {
+            display: inline-block;
+            padding: 5px 10px;
+            background: var(--twitch);
+            color: var(--void);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .project-desc {
+            color: var(--arctic);
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            padding: 4px 8px;
+            border: 2px solid var(--arctic);
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        /* Skills Section */
+        .skills-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .skill-item {
+            margin-bottom: 2rem;
+            border: 2px solid var(--twitch);
+            padding: 1rem;
+            background: var(--pixel-bg);
+        }
+
+        .skill-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .skill-name {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            color: var(--twitch);
+        }
+
+        .skill-level {
+            color: var(--arctic);
+        }
+
+        .skill-bar {
+            height: 20px;
+            background: var(--void);
+            border: 2px solid var(--twitch);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--twitch),
+                var(--twitch) 10px,
+                var(--twitch-dark) 10px,
+                var(--twitch-dark) 20px
+            );
+            width: 0;
+            transition: width 1s steps(20);
+            position: relative;
+        }
+
+        .skill-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Contact Section */
+        .contact {
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--twitch);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--arctic);
+            text-decoration: none;
+            font-size: 1.5rem;
+            box-shadow: 4px 4px 0 var(--twitch);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-link:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 8px 8px 0 var(--twitch);
+            background: var(--twitch);
+            color: var(--void);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 5%;
+            text-align: center;
+            border-top: 2px solid var(--twitch);
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Scroll Animation */
+        .pixel-fade {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s steps(5);
+        }
+
+        .pixel-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* CRT Effect Overlay */
+        .crt::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            background-size: 100% 4px;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 1.2rem; }
+            .section-title { font-size: 1rem; }
+        }
+    </style>
 </head>
-<body>
-  <img src="https://steamuserimages-a.akamaihd.net/ugc/2469738708355327678/E0567EDF9BD0F56C5A3D94A7D83B8F07942E4FFD/?imw=5000&imh=5000&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false" alt="Scary Image">
+<body class="crt">
+    <div class="pixel-bg"></div>
+    <canvas id="molecule-canvas"></canvas>
+    <div id="heart-container"></div>
 
-  <audio id="scream" autoplay>
-    <source src="https://www.soundjay.com/human/sounds/scream-01.mp3" type="audio/mpeg">
-    Ваш браузер не поддерживает воспроизведение аудио.
-  </audio>
+    <nav>
+        <div class="logo" id="logo">Fierte</div>
+        <ul class="nav-links">
+            <li><a href="#projects">[ПРОЕКТЫ]</a></li>
+            <li><a href="#skills">[СКИЛЛЫ]</a></li>
+            <li><a href="#contact">[КОНТАКТ]</a></li>
+        </ul>
+    </nav>
 
-  <script>
-   
-    window.addEventListener("click", () => {
-      document.getElementById("scream").play();
-    });
-  </script>
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">>>> VIBE_CODING = TRUE</div>
+            <h1>
+                ПИКСЕЛЬНЫЙ
+                <span>РАЗРАБОТЧИК</span>
+            </h1>
+            <p class="hero-subtitle">
+                Создаю Telegram ботов и мини-приложения.<br>
+                Python, веб-технологии и 100% вайб.
+            </p>
+            <div class="hero-cta">
+                <a href="#projects" class="pixel-btn filled">[ПОСМОТРЕТЬ]</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <div class="section-header pixel-fade">
+            <span class="section-tag">[ ПОРТФОЛИО ]</span>
+            <h2 class="section-title">АКТИВНЫЕ ПРОЕКТЫ</h2>
+        </div>
+        
+        <div class="projects-grid" id="projects-grid">
+            <!-- Проекты загружаются через JS -->
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="section-header pixel-fade">
+            <span class="section-tag">[ СТЕК ]</span>
+            <h2 class="section-title">НАВЫКИ</h2>
+        </div>
+        
+        <div class="skills-container" id="skills-container">
+            <!-- Скиллы загружаются через JS -->
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact pixel-fade">
+            <span class="section-tag">[ СВЯЗЬ ]</span>
+            <h2 class="section-title">ГДЕ МЕНЯ НАЙТИ</h2>
+            
+            <div class="social-links">
+                <a href="https://github.com/firte1337" target="_blank" class="social-link" title="GitHub">
+                    <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                    </svg>
+                </a>
+                <a href="https://t.me/fierte1337" class="social-link" title="Telegram">
+                    <svg width="30" height="30" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>[ Fierte // <span id="year">2025</span> // VIBE_CODING ]</p>
+    </footer>
+
+    <script>
+        // ДАННЫЕ
+        const PROJECTS = [
+            {
+                id: 1,
+                title: "Music Player Bot",
+                category: "Telegram Bot + Mini App",
+                description: "Музыкальный плеер в Telegram с мини-приложением. Поиск, плейлисты, кроссплатформенный стриминг",
+                tech: ["Python", "aiogram", "Web App", "FFmpeg"],
+                status: "В разработке",
+                color: "#9146ff"
+            },
+            {
+                id: 2,
+                title: "Translit & Crypto Bot",
+                category: "Telegram Bot",
+                description: "Транслитерация текста и шифрование Base64. Утилитарный бот для быстрых конвертаций",
+                tech: ["Python", "aiogram", "Cryptography"],
+                status: "В разработке",
+                color: "#00b8d4"
+            }
+        ];
+
+        const SKILLS = [
+            { name: "Python", level: 85, category: "backend" },
+            { name: "HTML/CSS/JS", level: 80, category: "frontend" },
+            { name: "VibeCoding", level: 100, category: "flow" },
+            { name: "Telegram Bots", level: 90, category: "bots" },
+            { name: "aiogram", level: 88, category: "framework" },
+            { name: "Mini Apps", level: 75, category: "webapps" },
+            { name: "Git/GitHub", level: 70, category: "tools" },
+            { name: "Linux", level: 65, category: "system" }
+        ];
+
+        // РЕНДЕР ПРОЕКТОВ
+        function renderProjects() {
+            const grid = document.getElementById('projects-grid');
+            grid.innerHTML = PROJECTS.map(project => `
+                <div class="project-card pixel-fade">
+                    <div class="project-status">${project.status}</div>
+                    <h3 class="project-title">${project.title}</h3>
+                    <p class="project-desc">${project.description}</p>
+                    <div class="project-tech">
+                        ${project.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // РЕНДЕР СКИЛЛОВ
+        function renderSkills() {
+            const container = document.getElementById('skills-container');
+            container.innerHTML = SKILLS.map(skill => `
+                <div class="skill-item pixel-fade">
+                    <div class="skill-header">
+                        <span class="skill-name">${skill.name}</span>
+                        <span class="skill-level">${skill.level}%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" data-level="${skill.level}"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // УСТАНОВКА ГОДА
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // ИНИЦИАЛИЗАЦИЯ
+        renderProjects();
+        renderSkills();
+
+        // MOLECULE ANIMATION
+        const canvas = document.getElementById('molecule-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let atoms = [];
+        let bonds = [];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        
+        window.addEventListener('resize', resize);
+        resize();
+        
+        class Atom {
+            constructor(x, y, type) {
+                this.x = x;
+                this.y = y;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.radius = type === 'center' ? 8 : 5;
+                this.type = type;
+            }
+            
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                if (this.x < 50 || this.x > width - 50) this.vx *= -1;
+                if (this.y < 50 || this.y > height - 50) this.vy *= -1;
+            }
+            
+            draw() {
+                ctx.fillStyle = this.type === 'center' ? '#9146ff' : '#f0f6f0';
+                ctx.fillRect(
+                    this.x - this.radius, 
+                    this.y - this.radius, 
+                    this.radius * 2, 
+                    this.radius * 2
+                );
+                
+                ctx.fillStyle = this.type === 'center' ? 'rgba(145, 70, 255, 0.3)' : 'rgba(240, 246, 240, 0.2)';
+                ctx.fillRect(
+                    this.x - this.radius - 2, 
+                    this.y - this.radius - 2, 
+                    this.radius * 2 + 4, 
+                    this.radius * 2 + 4
+                );
+            }
+        }
+        
+        function createMolecule(x, y) {
+            const center = new Atom(x, y, 'center');
+            atoms.push(center);
+            
+            const numNodes = Math.floor(Math.random() * 3) + 3;
+            for (let i = 0; i < numNodes; i++) {
+                const angle = (Math.PI * 2 / numNodes) * i;
+                const dist = 60 + Math.random() * 40;
+                const node = new Atom(
+                    x + Math.cos(angle) * dist,
+                    y + Math.sin(angle) * dist,
+                    'node'
+                );
+                atoms.push(node);
+                bonds.push({ from: center, to: node });
+                
+                if (Math.random() > 0.5 && i > 0) {
+                    bonds.push({ from: atoms[atoms.length - 2], to: node });
+                }
+            }
+        }
+        
+        for (let i = 0; i < 5; i++) {
+            createMolecule(
+                100 + Math.random() * (window.innerWidth - 200),
+                100 + Math.random() * (window.innerHeight - 200)
+            );
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            bonds.forEach(bond => {
+                ctx.strokeStyle = 'rgba(145, 70, 255, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(bond.from.x, bond.from.y);
+                ctx.lineTo(bond.to.x, bond.to.y);
+                ctx.stroke();
+            });
+            
+            atoms.forEach(atom => {
+                atom.update();
+                atom.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        animate();
+
+        // HEART EXPLOSION
+        const logo = document.getElementById('logo');
+        const heartContainer = document.getElementById('heart-container');
+        
+        logo.addEventListener('click', (e) => {
+            const rect = logo.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            for (let i = 0; i < 12; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = Math.random() > 0.5 ? 'pixel-heart' : 'pixel-heart dark';
+                    
+                    const angle = (Math.PI * 2 / 12) * i;
+                    const x = centerX + Math.cos(angle) * 30 - 10;
+                    const y = centerY + Math.sin(angle) * 30 - 10;
+                    
+                    heart.style.left = x + 'px';
+                    heart.style.top = y + 'px';
+                    
+                    heartContainer.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 50);
+            }
+            
+            logo.style.transform = 'scale(0.9)';
+            setTimeout(() => logo.style.transform = '', 100);
+        });
+
+        // SCROLL ANIMATIONS
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    const progress = entry.target.querySelector('.skill-progress');
+                    if (progress) {
+                        setTimeout(() => {
+                            progress.style.width = progress.getAttribute('data-level') + '%';
+                        }, 200);
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.pixel-fade').forEach(el => observer.observe(el));
+
+        // SMOOTH SCROLL
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // RANDOM GLITCH
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                logo.style.textShadow = '4px 4px 0 #ff00ff, -4px -4px 0 #00ffff';
+                setTimeout(() => {
+                    logo.style.textShadow = '4px 4px 0 var(--twitch-dark)';
+                }, 100);
+            }
+        }, 3000);
+    </script>
 </body>
 </html>
