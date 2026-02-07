@@ -518,7 +518,7 @@
     <div id="heart-container"></div>
 
     <nav>
-        <div class="logo" id="logo">Fierte</div>
+        <div class="logo" id="logo">FIERTE</div>
         <ul class="nav-links">
             <li><a href="#projects">[ПРОЕКТЫ]</a></li>
             <li><a href="#skills">[СКИЛЛЫ]</a></li>
@@ -605,10 +605,11 @@
                 id: 2,
                 title: "Translit & Crypto Bot",
                 category: "Telegram Bot",
-                description: "Транслитерация текста и шифрование Base64. Утилитарный бот для быстрых конвертаций",
+                description: "Транслитерация текста и шифрование Base64. Утилитарный бот для быстрых конвертаций. Частично готов, в процессе только бот",
                 tech: ["Python", "aiogram", "Cryptography"],
                 status: "В разработке",
-                color: "#00b8d4"
+                color: "#00b8d4",
+                link: "https://transcrypt-rosy.vercel.app/"
             }
         ];
 
@@ -626,16 +627,20 @@
         // РЕНДЕР ПРОЕКТОВ
         function renderProjects() {
             const grid = document.getElementById('projects-grid');
-            grid.innerHTML = PROJECTS.map(project => `
-                <div class="project-card pixel-fade">
+            grid.innerHTML = PROJECTS.map(project => {
+                const cardContent = `
                     <div class="project-status">${project.status}</div>
                     <h3 class="project-title">${project.title}</h3>
                     <p class="project-desc">${project.description}</p>
                     <div class="project-tech">
                         ${project.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
                     </div>
-                </div>
-            `).join('');
+                `;
+                if (project.link) {
+                    return `<a href="${project.link}" target="_blank" class="project-card pixel-fade" style="text-decoration: none; color: inherit; display: block;">${cardContent}</a>`;
+                }
+                return `<div class="project-card pixel-fade">${cardContent}</div>`;
+            }).join('');
         }
 
         // РЕНДЕР СКИЛЛОВ
