@@ -1,6 +1,6 @@
 # 👾 Fierte
 
-**Vibe Developer** — создаю Telegram ботов и мини-приложения.
+**Vibe Developer** — создаю Telegram ботов и мини-приложения и веб страниц.
 
 ## 🛠️ Стек
 
@@ -15,13 +15,13 @@
 | Проект | Описание | Статус |
 |--------|----------|--------|
 | **Music Player Bot** | Музыкальный плеер в Telegram с мини-приложением | `В разработке` |
-| **Translit & Crypto Bot** | Транслит + шифрование Base64 | `В частичной разработке` |
+| **Silent Byte** | Транслит + шифрование Base64 | `В частичной разработке` |
 
 ## 🔗 Ссылки
 
 [![Website](https://img.shields.io/badge/Website-9146ff?style=for-the-badge&logo=google-chrome&logoColor=white)](https://fierte1337.vercel.app/)
 [![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fierte1337)
-[![transcrypt](https://img.shields.io/badge/transcrypt-6366F1?style=for-the-badge&logoColor=white)](https://transcrypt-rosy.vercel.app/)
+[![silentbyte](https://img.shields.io/badge/transcrypt-6366F1?style=for-the-badge&logoColor=white)](https://transcrypt-rosy.vercel.app/)
 ---
 
 *100% вайб*
