@@ -21,7 +21,7 @@
 
 [![Website](https://img.shields.io/badge/Website-9146ff?style=for-the-badge&logo=google-chrome&logoColor=white)](https://fierte1337.vercel.app/)
 [![Telegram](https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fierte1337)
-[![silentbyte](https://img.shields.io/badge/silentbyte-6366F1?style=for-the-badge&logoColor=white)](https://silent-byte.xyz/main/)
+[![silentbyte](https://img.shields.io/badge/silentbyte-6366F1?style=for-the-badge&logoColor=white)](silent-byte.xyz)
 [![SiekaMusicBot](https://img.shields.io/badge/siekamusicbot-6366F1?style=for-the-badge&logoColor=white)](https://t.me/siekamusicbot)
 ---
 
