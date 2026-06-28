@@ -1,6 +1,6 @@
 # 👾 Fierte
 
-**seudo Developer** — создаю Telegram ботов и мини-приложения и веб страниц.
+**Pseudo Developer** — создаю Telegram ботов и мини-приложения и веб страниц.
 
 ## 🛠️ Стек
 
